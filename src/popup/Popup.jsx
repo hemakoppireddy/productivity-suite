@@ -25,7 +25,36 @@ function Popup() {
           value={sessionName}
           onChange={(e) => setSessionName(e.target.value)}
         />
-        <button data-testid="save-session-btn">Save Current Tabs</button>
+        <button
+          data-testid="save-session-btn"
+          onClick={() => {
+            if (!sessionName.trim()) {
+              alert("Please enter a session name");
+              return;
+            }
+
+            chrome.tabs.query({ currentWindow: true }, (tabs) => {
+              const urls = tabs.map((tab) => tab.url);
+
+              chrome.storage.local.get(["sessions"], (data) => {
+                const existingSessions = data.sessions || {};
+
+                const updatedSessions = {
+                  ...existingSessions,
+                  [sessionName]: urls,
+                };
+
+                chrome.storage.local.set({ sessions: updatedSessions }, () => {
+                  setSessions(updatedSessions);
+                  setSessionName("");
+                  console.log("Session saved");
+                });
+              });
+            });
+          }}
+        >
+          Save Current Tabs
+        </button>
       </div>
 
       {/* Sessions List */}
@@ -36,7 +65,20 @@ function Popup() {
           {Object.keys(sessions).map((name) => (
             <div key={name} className="sessions-item">
               <span>{name}</span>
-              <button data-testid={`restore-session-${name}`}>Restore</button>
+              <button
+                data-testid={`restore-session-${name}`}
+                onClick={() => {
+                  const urls = sessions[name];
+
+                  if (!urls || urls.length === 0) return;
+
+                  chrome.windows.create({
+                    url: urls,
+                  });
+                }}
+              >
+                Restore
+              </button>
             </div>
           ))}
         </div>
