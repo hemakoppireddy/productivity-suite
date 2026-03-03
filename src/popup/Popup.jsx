@@ -25,9 +25,7 @@ function Popup() {
           value={sessionName}
           onChange={(e) => setSessionName(e.target.value)}
         />
-        <button data-testid="save-session-btn">
-          Save Current Tabs
-        </button>
+        <button data-testid="save-session-btn">Save Current Tabs</button>
       </div>
 
       {/* Sessions List */}
@@ -36,13 +34,9 @@ function Popup() {
         <div data-testid="sessions-list">
           {Object.keys(sessions).length === 0 && <p>No sessions saved.</p>}
           {Object.keys(sessions).map((name) => (
-            <div key={name}>
+            <div key={name} className="sessions-item">
               <span>{name}</span>
-              <button
-                data-testid={`restore-session-${name}`}
-              >
-                Restore
-              </button>
+              <button data-testid={`restore-session-${name}`}>Restore</button>
             </div>
           ))}
         </div>
@@ -57,7 +51,14 @@ function Popup() {
           onChange={(e) => setNotes(e.target.value)}
           rows="4"
         />
-        <button data-testid="save-notes-btn">
+        <button
+          data-testid="save-notes-btn"
+          onClick={() => {
+            chrome.storage.local.set({ notes: notes }, () => {
+              console.log("Notes saved");
+            });
+          }}
+        >
           Save Notes
         </button>
       </div>
