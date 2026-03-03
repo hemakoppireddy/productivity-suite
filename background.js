@@ -45,3 +45,29 @@ chrome.commands.onCommand.addListener((command) => {
 
   }
 });
+
+// Create context menu on install
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "add-page-to-notes",
+    title: "Add page to notes",
+    contexts: ["page"]
+  });
+});
+
+// Handle context menu click
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "add-page-to-notes") {
+
+    const textToAppend = `${tab.title} - ${tab.url}\n`;
+
+    chrome.storage.local.get(["notes"], (data) => {
+      const existingNotes = data.notes || "";
+
+      chrome.storage.local.set({
+        notes: existingNotes + textToAppend
+      });
+    });
+
+  }
+});
