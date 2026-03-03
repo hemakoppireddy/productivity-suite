@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+}
+
+.options-container {
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+  background: #f4f6fa;
+  min-height: 100vh;
+}
+
+.section {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
