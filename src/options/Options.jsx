@@ -38,10 +38,7 @@ function Options() {
           data-testid="block-hostname-input"
         />
 
-        <button
-          data-testid="add-block-btn"
-          onClick={addBlockedSite}
-        >
+        <button data-testid="add-block-btn" onClick={addBlockedSite}>
           Add to Blocklist
         </button>
       </div>
@@ -57,7 +54,33 @@ function Options() {
       </div>
 
       <div className="section">
-        <button data-testid="export-data-btn">
+        <button
+          data-testid="export-data-btn"
+          onClick={() => {
+            chrome.storage.local.get(["sessions", "notes"], (localData) => {
+              chrome.storage.sync.get(["blockedSites"], (syncData) => {
+                const exportData = {
+                  sessions: localData.sessions || {},
+                  notes: localData.notes || "",
+                  blockedSites: syncData.blockedSites || [],
+                };
+
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+                  type: "application/json",
+                });
+
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "productivity_suite_export.json";
+                a.click();
+
+                URL.revokeObjectURL(url);
+              });
+            });
+          }}
+        >
           Export All Data
         </button>
       </div>
