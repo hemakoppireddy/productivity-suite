@@ -1,24 +1,38 @@
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
+import path from "path";
+import CopyPlugin from "copy-webpack-plugin";
+import { fileURLToPath } from "url";
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   entry: {
     popup: "./src/popup/popup.js",
     options: "./src/options/options.js",
     newtab: "./src/newtab/newtab.js",
     background: "./background.js"
   },
+
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
     clean: true
   },
+
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: "babel-loader"
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              ["@babel/preset-env", { targets: "defaults" }],
+              "@babel/preset-react"
+            ]
+          }
+        }
       },
       {
         test: /\.css$/,
@@ -26,9 +40,11 @@ module.exports = {
       }
     ]
   },
+
   resolve: {
     extensions: [".js", ".jsx"]
   },
+
   plugins: [
     new CopyPlugin({
       patterns: [

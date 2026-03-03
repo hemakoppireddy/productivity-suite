@@ -1,0 +1,20 @@
+.popup-container {
+  width: 300px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+button {
+  margin-top: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+  resize: none;
+}
